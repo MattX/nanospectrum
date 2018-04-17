@@ -1,0 +1,5 @@
+PyAudio==0.2.11
+matplotlib==2.2.2
+numpy==1.14.2
+requests==2.18.4
+pysdl2==0.9.6
