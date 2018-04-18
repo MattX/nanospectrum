@@ -1,18 +1,15 @@
-from collections import namedtuple
-
 import numpy as np
 import requests
 import json
 import socket
-from matplotlib import cm
-
-Panel = namedtuple('Panel', ('id', 'center_x', 'center_y', 'orientation'))
+from managers.manager_base import ManagerBase, Panel
 
 
 class PanelLayout:
     def __init__(self, json):
-        self.panels = [Panel(p['panelId'], p['x'], p['y'], np.deg2rad(p['o'])) for p in json]
-        self.panel_ids = [p.id for p in sorted(self.panels, key=lambda v: v.center_x)]
+        self.panels = sorted([Panel(p['panelId'], p['x'], p['y'], np.deg2rad(p['o'])) for p in json],
+                             key=lambda v: v.center_x)
+        self.panel_ids = [p.id for p in self.panels]
 
     @staticmethod
     def make_panel_info(panel_id, color):
@@ -24,8 +21,8 @@ class PanelLayout:
                 b''.join([PanelLayout.make_panel_info(i, c) for (i, c) in zip(self.panel_ids, colors_list)]))
 
 
-class NanoleafManager:
-    def __init__(self, ip, port, token, cmap):
+class NanoleafManager(ManagerBase):
+    def __init__(self, ip, port, token):
         self.ip = ip
         self.port = port
         self.token = token
@@ -46,25 +43,18 @@ class NanoleafManager:
         self.addr = (udp_ip, udp_port)
 
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        self.cmap = cm.get_cmap(cmap)
-
-    def refresh(self):
-        pass
 
     def get_num_panels(self):
         return len(self.layout.panels)
 
+    def get_layout(self):
+        return self.layout.panels
+
     def put_colors(self, colors):
         assert len(colors) == self.get_num_panels()
 
-        print(f"Putting {colors[-1]}")
+        # print(f"Putting {colors[-1]}")
 
         colors = np.array(colors)
         frame = self.layout.make_frame(np.rint(colors * 255).astype(int))
         self.sock.sendto(frame, self.addr)
-
-    def put_values(self, values):
-        assert len(values) == self.get_num_panels()
-
-        colors = self.cmap(values)[:, :3]
-        self.put_colors(colors)

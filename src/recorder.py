@@ -2,7 +2,7 @@ import pyaudio
 
 
 def record(queue, rate):
-    CHUNK = 1024
+    CHUNK = 128
     FORMAT = pyaudio.paInt16
     CHANNELS = 1
 
