@@ -1,21 +1,47 @@
 import pyaudio
+import wave
+
+CHUNK = 4096
+FORMAT = pyaudio.paInt16
+CHANNELS = 1
 
 
-def record(queue, rate):
-    CHUNK = 128
-    FORMAT = pyaudio.paInt16
-    CHANNELS = 1
+class MikeRecorder:
+    def record(self, queue, rate):
+        p = pyaudio.PyAudio()
 
-    p = pyaudio.PyAudio()
+        stream = p.open(format=FORMAT,
+                        channels=CHANNELS,
+                        rate=rate,
+                        input=True,
+                        frames_per_buffer=CHUNK)
 
-    stream = p.open(format=FORMAT,
-                    channels=CHANNELS,
-                    rate=rate,
-                    input=True,
-                    frames_per_buffer=CHUNK)
+        print("* recording")
 
-    print("* recording")
+        while True:
+            data = stream.read(CHUNK)
+            queue.put_nowait(data)
 
-    while True:
-        data = stream.read(CHUNK)
-        queue.put_nowait(data)
+
+class FileRecorder:
+    def __init__(self, file):
+        self.file = file
+
+    def record(self, queue, rate):
+        p = pyaudio.PyAudio()
+
+        stream = wave.open(self.file, 'rb')
+        assert p.get_format_from_width(stream.getsampwidth()) == FORMAT
+        out = p.open(format=p.get_format_from_width(stream.getsampwidth()),
+                     channels=1,
+                     rate=stream.getframerate(),
+                     output=True)
+
+        print(f"* reading {self.file}")
+
+        data = stream.readframes(CHUNK)
+
+        while data != b'':
+            out.write(data)
+            queue.put_nowait(data)
+            data = stream.readframes(CHUNK)

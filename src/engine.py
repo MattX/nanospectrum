@@ -7,7 +7,8 @@ from util import get_all_from_queue
 
 
 class Engine:
-    def __init__(self, manager, sample_rate, refresh_rate, visualization, backends):
+    def __init__(self, recorder, manager, sample_rate, refresh_rate, visualization, backends):
+        self.recorder = recorder
         self.manager = manager
         self.n_panels = self.manager.get_num_panels()
         self.refresh_rate = refresh_rate
@@ -17,7 +18,7 @@ class Engine:
         self.visualization_queue = queue.Queue(maxsize=1)
         self.backends = backends
         self.backend_queues = [queue.Queue(maxsize=5) for _ in self.backends]
-        self.recorder_thread = threading.Thread(target=recorder.record, args=(self.audio_queue, sample_rate))
+        self.recorder_thread = threading.Thread(target=self.recorder.record, args=(self.audio_queue, sample_rate))
         self.visualization_thread = threading.Thread(target=self.poll_to_visualization)
         self.multiplexer_thread = threading.Thread(target=self.poll_to_backends)
 
@@ -34,7 +35,8 @@ class Engine:
     def poll_to_visualization(self):
         while True:
             data = b''.join(get_all_from_queue(self.audio_queue))
-            self.visualization_queue.put(self.visualization.process_samples(data, self.n_panels))
+            colors = self.visualization.process_samples(data, self.n_panels)
+            self.visualization_queue.put(colors)
 
     def poll_to_backends(self):
         while True:
