@@ -2,7 +2,6 @@ import threading
 import queue
 import time
 
-import recorder
 from util import get_all_from_queue
 
 

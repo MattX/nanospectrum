@@ -1,4 +1,4 @@
-from backends.backend_base import BackendBase
+from .backend_base import BackendBase
 
 
 class NanoleafBackend(BackendBase):

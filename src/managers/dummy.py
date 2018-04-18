@@ -1,6 +1,6 @@
 import numpy as np
 
-from managers.manager_base import ManagerBase, Panel
+from .manager_base import ManagerBase, Panel
 
 
 class DummyManager(ManagerBase):

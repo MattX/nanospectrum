@@ -5,9 +5,8 @@ import threading
 from PIL import Image, ImageDraw
 import numpy as np
 import flask
-import matplotlib.pyplot as plt
 
-from backends.backend_base import BackendBase
+from .backend_base import BackendBase
 
 
 class WebBackend(BackendBase):

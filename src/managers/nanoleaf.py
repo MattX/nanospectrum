@@ -2,7 +2,7 @@ import numpy as np
 import requests
 import json
 import socket
-from managers.manager_base import ManagerBase, Panel
+from .manager_base import ManagerBase, Panel
 
 
 class PanelLayout:

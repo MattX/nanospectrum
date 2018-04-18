@@ -1,7 +1,5 @@
 from abc import ABC, abstractmethod
 
-from util import get_all_from_queue
-
 
 class VisualizationBase(ABC):
     @abstractmethod

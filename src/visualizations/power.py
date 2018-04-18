@@ -1,7 +1,7 @@
 import numpy as np
 from matplotlib import cm
 
-from visualizations.visualization_base import VisualizationBase
+from .visualization_base import VisualizationBase
 
 
 class PowerVisualization(VisualizationBase):
