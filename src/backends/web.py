@@ -1,6 +1,7 @@
 import io
 import queue
 import threading
+import warnings
 
 from PIL import Image, ImageDraw
 import numpy as np
@@ -12,6 +13,7 @@ from .backend_base import BackendBase
 
 class WebBackend(BackendBase):
     def __init__(self, manager, width=800, height=200):
+        warnings.warn(UserWarning("WebBackend is experimental and suffers from poor performance"))
         self.n_panels = manager.get_num_panels()
         self.layout = manager.get_layout()
         self.png_queue = queue.Queue()

@@ -42,10 +42,8 @@ def scaled_coords(coords, width, height):
     ylim = np.min(coords[:, :, 1]), np.max(coords[:, :, 1])
 
     scale = min(width / (xlim[1] - xlim[0]), height / (ylim[1] - ylim[0]))
-    print(scale)
 
     ret = coords.copy()
-
     ret[:, :, 0] -= xlim[0]
     ret[:, :, 1] -= ylim[0]
     return ret * scale

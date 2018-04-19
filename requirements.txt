@@ -3,3 +3,5 @@ matplotlib==2.2.2
 numpy==1.14.2
 requests==2.18.4
 pysdl2==0.9.6
+Pillow==5.1.0
+Flask==0.12.2

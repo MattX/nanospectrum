@@ -7,5 +7,4 @@ class BackendBase(ABC):
         """
         Displays a visualization.
         :param values: An array of colors to display
-        :return:
         """

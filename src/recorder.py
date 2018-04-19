@@ -31,7 +31,7 @@ class FileRecorder:
         stream = wave.open(self.file, 'rb')
         assert p.get_format_from_width(stream.getsampwidth()) == FORMAT
         out = p.open(format=p.get_format_from_width(stream.getsampwidth()),
-                     channels=1,
+                     channels=stream.getnchannels(),
                      rate=stream.getframerate(),
                      output=True)
 

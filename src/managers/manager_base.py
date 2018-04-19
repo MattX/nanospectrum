@@ -20,10 +20,8 @@ class Panel(namedtuple('Panel', ('id', 'center_x', 'center_y', 'orientation'))):
         return [Panel(*pr) for pr in struct.iter_unpack(Panel.pack_string, bts)]
 
 
+# TODO: change layouts to remove the factor of 150
 class ManagerBase(ABC):
-    """
-    Todo: change layouts to remove the factor of 150
-    """
     @abstractmethod
     def get_num_panels(self) -> int:
         pass
