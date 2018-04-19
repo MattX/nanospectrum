@@ -5,7 +5,7 @@ from recorder import MikeRecorder, FileRecorder
 from visualizations.power import PowerVisualization
 from visualizations.bar import BarVisualization
 from backends.nanoleaf import NanoleafBackend
-from backends.web import WebBackend
+from backends.sdl import SdlBackend
 from managers import nanoleaf, dummy
 
 RATE = 44100
@@ -27,17 +27,18 @@ if __name__ == '__main__':
     else:
         manager = nanoleaf.NanoleafManager(args.ip, args.port, open(args.token_file).read().strip())
     nanoleaf_backend = NanoleafBackend(manager)
-    web_backend = WebBackend(manager)
+    sdl_backend = SdlBackend(manager)
 
-    visualization = BarVisualization(manager)
+    visualization = PowerVisualization(250, 1000, RATE, 'viridis')
 
     if args.file is not None:
         recorder = FileRecorder(args.file)
     else:
         recorder = MikeRecorder()
 
-    engine = Engine(recorder, manager, RATE, 0.05, visualization, [
+    engine = Engine(recorder, manager, RATE, 0.1, visualization, [
         nanoleaf_backend,
         # web_backend,
+        sdl_backend
     ])
     engine.start()

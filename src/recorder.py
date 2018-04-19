@@ -16,8 +16,6 @@ class MikeRecorder:
                         input=True,
                         frames_per_buffer=CHUNK)
 
-        print("* recording")
-
         while True:
             data = stream.read(CHUNK)
             queue.put_nowait(data)
@@ -36,8 +34,6 @@ class FileRecorder:
                      channels=1,
                      rate=stream.getframerate(),
                      output=True)
-
-        print(f"* reading {self.file}")
 
         data = stream.readframes(CHUNK)
 

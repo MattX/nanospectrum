@@ -5,6 +5,7 @@ import socket
 from .manager_base import ManagerBase, Panel
 
 
+# Todo: integrate this better with the Panel class.
 class PanelLayout:
     def __init__(self, json):
         self.panels = sorted([Panel(p['panelId'], p['x'], p['y'], np.deg2rad(p['o'])) for p in json],

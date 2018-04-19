@@ -6,6 +6,7 @@ from PIL import Image, ImageDraw
 import numpy as np
 import flask
 
+from util import triangle_patch
 from .backend_base import BackendBase
 
 
@@ -18,19 +19,10 @@ class WebBackend(BackendBase):
         self.height = height
         threading.Thread(target=self.flask).start()
 
-    @staticmethod
-    def triangle_patch(centroid, rot, side):
-        height = np.sqrt(3) / 2 * side
-        relative_coords = np.array([[-height / 3, -side / 2], [-height / 3, side / 2], [2 * height / 3, 0]])
-        s, c = np.sin(rot), np.cos(rot)
-        rotated = relative_coords @ np.array([[c, s], [-s, c]])
-        coords = np.array([centroid]) + rotated
-        return coords
-
     def png(self, color_list):
         im = Image.new('RGB', (self.width, self.height), 'white')
         draw = ImageDraw.Draw(im)
-        coords = np.array([self.triangle_patch([p.center_x, p.center_y], p.orientation + np.pi / 2, 150).astype(int)
+        coords = np.array([triangle_patch([p.center_x, p.center_y], p.orientation + np.pi / 2, 150).astype(int)
                           .flatten().tolist() for p in self.layout])
 
         xlim = np.min(coords[:, ::2]), np.max(coords[:, ::2])
